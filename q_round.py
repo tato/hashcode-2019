@@ -5,7 +5,7 @@ class Photo:
     def __init__(self, id, orient, tags):
         self.id = id
         self.orient = orient
-        self.tags = tags
+        self.tags = set(tags)
 
 for i in range(n_photos):
     words = input().split()
@@ -26,6 +26,16 @@ if 0:
 horizontals = [ p for p in photos if p.orient == 'H' ]
 verticals = [ p for p in photos if p.orient == 'V' ]
 
+for i in range(0, len(verticals)//2*2, 2):
+    a = verticals[i]
+    b = verticals[i+1]
+    newtags = a.tags.union(b.tags)
+    newphoto = Photo(str(a.id) + ' ' + str(b.id), 'H', newtags)
+    horizontals.append(newphoto)
+
+horizontals = sorted(horizontals, key=lambda x: len(x.tags), reverse=True)
+
+
 slides = []
 if len(horizontals) > 0:
     slides = [ horizontals[0] ]
@@ -45,11 +55,8 @@ if len(horizontals) > 0:
         horizontals.remove(best)
         #print("{} slides, {} photos".format(len(slides), len(photos)))
 
-print(len(slides) + len(verticals)//2)
+print(len(slides))
 
 for s in slides:
     print(s.id)
-
-for i in range(0, len(verticals)//2*2, 2):
-    print(str(verticals[i].id) + ' ' + str(verticals[i+1].id))
 
