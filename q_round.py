@@ -26,22 +26,24 @@ if 0:
 horizontals = [ p for p in photos if p.orient == 'H' ]
 verticals = [ p for p in photos if p.orient == 'V' ]
 
-slides = [ horizontals[0] ]
-del horizontals[0]
+slides = []
+if len(horizontals) > 0:
+    slides = [ horizontals[0] ]
+    del horizontals[0]
 
-def compare(xs, ys):
-    common = 0
-    for x in xs.tags:
-        if x in ys.tags:
-            common += 1
-    return min(len(xs.tags)-common, len(ys.tags)-common, common)
+    def compare(xs, ys):
+        common = 0
+        for x in xs.tags:
+            if x in ys.tags:
+                common += 1
+        return min(len(xs.tags)-common, len(ys.tags)-common, common)
 
-while len(horizontals) > 0:
-    previous = slides[len(slides)-1]
-    best = sorted(horizontals, key=lambda p: compare(p, previous))[0]
-    slides.append(best)
-    horizontals.remove(best)
-    print("{} slides, {} photos".format(len(slides), len(photos)))
+    while len(horizontals) > 0:
+        previous = slides[len(slides)-1]
+        best = sorted(horizontals[:100], key=lambda p: compare(p, previous))[-1]
+        slides.append(best)
+        horizontals.remove(best)
+        #print("{} slides, {} photos".format(len(slides), len(photos)))
 
 print(len(slides) + len(verticals)//2)
 
