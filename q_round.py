@@ -11,24 +11,34 @@ for i in range(n_photos):
     words = input().split()
     photos.append(Photo(i, words[0], words[2:]))
 
-if 0:
-    tags = set()
-    for p in photos:
-        tags = tags.union(set(p.tags))
-    tags_ids = dict()
-    for i,t in enumerate(tags):
-        tags_ids[t] = i
-    for p in photos:
-        tags_as_ids = [ tags_ids[t] for t in p.tags ]
-        p.tags = tags_as_ids
+#     tags = set()
+#     for p in photos:
+#         tags = tags.union(set(p.tags))
+#     tags_ids = dict()
+#     for i,t in enumerate(tags):
+#         tags_ids[t] = i
+#     for p in photos:
+#         tags_as_ids = [ tags_ids[t] for t in p.tags ]
+#         p.tags = tags_as_ids
 
 
 horizontals = [ p for p in photos if p.orient == 'H' ]
 verticals = [ p for p in photos if p.orient == 'V' ]
 
-for i in range(0, len(verticals)//2*2, 2):
-    a = verticals[i]
-    b = verticals[i+1]
+#     for i in range(0, len(verticals)//2*2, 2):
+#         a = verticals[i]
+#         b = verticals[i+1]
+#         newtags = a.tags.union(b.tags)
+#         newphoto = Photo(str(a.id) + ' ' + str(b.id), 'H', newtags)
+#         horizontals.append(newphoto)
+
+while len(verticals) > 0:
+    first = verticals[0]
+    del verticals[0]
+    best = sorted(verticals[:100], key=lambda x: len(x.tags.union(first.tags)), reverse=True)[0]
+    verticals.remove(best)
+    a = first
+    b = best
     newtags = a.tags.union(b.tags)
     newphoto = Photo(str(a.id) + ' ' + str(b.id), 'H', newtags)
     horizontals.append(newphoto)
